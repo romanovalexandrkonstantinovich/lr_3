@@ -1,0 +1,51 @@
+<aside class="mw-side">
+  <div style="display:flex;align-items:center;gap:10px;padding:4px 6px 18px;border-bottom:1px solid var(--border-soft)">
+    <a href="{{ url_for('home') }}" class="mw-logo" style="font-size:22px"><span class="a">Mobi</span><span class="b">Wave</span></a>
+  </div>
+  <div class="mw-user">
+    <div class="mw-avatar">{{ (session.username or 'А')[0]|upper }}</div>
+    <div class="who">
+      <b>{{ session.username or 'Пользователь' }}</b>
+      <span>{{ session.user_phone or '+7 ___ ___-__-__' }}</span>
+    </div>
+  </div>
+  <div class="mw-side-nav">
+    <a href="{{ url_for('profile') }}" class="mw-side-item {% if active=='settings' %}active{% endif %}">
+      <span class="ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 0 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+      </span>
+      Настройки
+    </a>
+    <a href="{{ url_for('my_tariff') }}" class="mw-side-item {% if active=='tariff' %}active{% endif %}">
+      <span class="ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>
+      </span>
+      Мой тариф
+    </a>
+    <a href="{{ url_for('topup') }}" class="mw-side-item {% if active=='topup' %}active{% endif %}">
+      <span class="ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h15a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7Z"/><path d="M3 7V6a2 2 0 0 1 2-2h11"/><circle cx="16" cy="14" r="1.4"/></svg>
+      </span>
+      Пополнение
+    </a>
+    <a href="{{ url_for('dashboard_services') }}" class="mw-side-item {% if active=='services' %}active{% endif %}">
+      <span class="ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </span>
+      Услуги
+    </a>
+    <a href="{{ url_for('logout') }}" class="mw-side-item">
+      <span class="ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </span>
+      Выйти
+    </a>
+  </div>
+  <div class="mw-side-info">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="width:8px;height:8px;border-radius:999px;background:#22c55e"></span>
+      <b style="color:var(--text);font-size:13px">Услуги активны</b>
+    </div>
+    <span>до 01.01.2027</span>
+  </div>
+</aside>

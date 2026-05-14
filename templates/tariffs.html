@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Тарифы{% endblock %}
+{% block body %}
+{% set active = 'tariffs' %}
+{% include "_header.html" %}
+<div class="mw-page" style="padding:60px 80px 64px">
+  <div style="text-align:center;margin-bottom:48px">
+    <h1 style="font-size:52px;margin:0 0 16px;letter-spacing:-0.025em;font-weight:700;line-height:1.1">
+      Связь, которая работает<br>для <span class="mw-grad-text">вас</span>
+    </h1>
+    <p style="font-size:17px;color:var(--text-2);max-width:620px;margin:0 auto;line-height:1.5">
+      Выберите тариф, который подходит именно вам. Без скрытых платежей, без ограничений.
+    </p>
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:8px;margin-bottom:36px">
+    <a href="{{ url_for('tariffs') }}" class="mw-btn {% if not with_desc %}mw-btn-primary{% else %}mw-btn-soft{% endif %}" style="padding:10px 22px;font-size:14px">Наши тарифы</a>
+    <a href="{{ url_for('tariffs') }}?detail=1" class="mw-btn {% if with_desc %}mw-btn-primary{% else %}mw-btn-soft{% endif %}" style="padding:10px 22px;font-size:14px">Почему MobiWave?</a>
+  </div>
+
+  <div style="text-align:center;margin-bottom:28px">
+    <h2 style="font-size:26px;margin:0 0 6px;letter-spacing:-0.02em;font-weight:700">Наши тарифы</h2>
+    <p style="margin:0;color:var(--text-3);font-size:14px">Прозрачные условия, честные цены</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1120px;margin:0 auto">
+    {% for t in tariffs %}
+    <div class="mw-tariff-card {% if t.featured %}featured{% endif %}">
+      {% if t.featured %}<span class="badge">Популярный</span>{% endif %}
+      <div>
+        <div class="name">{{ t.name }}</div>
+        <div class="price"><b>{{ t.price }}</b><span>₽/мес</span></div>
+      </div>
+      <ul>
+        {% for f in [t.gb, t.minutes, t.sms, t.extra] %}
+        <li>
+          <span class="mw-check">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+          </span>
+          {{ f }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% if with_desc %}
+      <p class="desc">{{ t.desc }}</p>
+      {% endif %}
+      <button class="mw-btn mw-btn-primary" data-tariff="{{ t.name }}" onclick="connectTariff(this)" style="justify-content:space-between;padding:14px 22px;margin-top:auto;{% if t.featured %}background:#fff;color:#1a1d29;box-shadow:none;{% endif %}">
+        <span>Подключить</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if not with_desc %}
+  <div style="margin-top:80px;text-align:center">
+    <h2 style="font-size:26px;margin:0 0 6px;letter-spacing:-0.02em;font-weight:700">Почему MobiWave?</h2>
+    <p style="margin:0 0 36px;color:var(--text-3);font-size:14px">Мы заботимся о каждом клиенте</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1120px;margin:0 auto">
+      {% for f in [
+        {'t':'Скорость 5G',     'd':'Сверхбыстрый интернет в более чем 50 городах России'},
+        {'t':'Надёжность',      'd':'99.9% времени безотказной работы сети по всей стране'},
+        {'t':'Поддержка 24/7',  'd':'Круглосуточная помощь по телефону, чату или в приложении'}
+      ] %}
+      <div class="mw-card" style="padding:28px;text-align:left">
+        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#eef0ff,#f4f0ff);display:grid;place-items:center;margin-bottom:16px">
+          <span style="width:22px;height:22px;border-radius:6px;background:var(--grad)"></span>
+        </div>
+        <h3 style="margin:0 0 8px;font-size:18px;font-weight:600">{{ f.t }}</h3>
+        <p style="margin:0;font-size:14px;color:var(--text-2);line-height:1.55">{{ f.d }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% include "_footer.html" %}
+<script>
+async function connectTariff(btn) {
+  {% if session.user_id %}
+  const tariff = btn.dataset.tariff;
+  const res = await fetch('{{ url_for("change_tariff") }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({tariff})
+  });
+  if (res.ok) window.location = '{{ url_for("my_tariff") }}';
+  {% else %}
+  window.location = '{{ url_for("login") }}';
+  {% endif %}
+}
+</script>
+{% endblock %}

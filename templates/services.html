@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Услуги{% endblock %}
+{% block body %}
+{% set active = 'services' %}
+{% include "_header.html" %}
+<div class="mw-page">
+  <div class="mw-title" style="margin-bottom:26px">
+    <h1>Услуги и подписки</h1>
+    <p>Управление подключёнными и доступными сервисами</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+    {% for s in services %}
+    <div class="mw-service-card">
+      <div class="head">
+        <div>
+          <h3>{{ s.title }}</h3>
+          <div class="sub">{{ s.desc }}</div>
+        </div>
+        <div class="icon"><span></span></div>
+      </div>
+      <div class="foot">
+        <b>{{ s.price }}</b>
+        <a href="{{ url_for('login') }}" class="mw-btn mw-btn-primary" style="padding:10px 22px;font-size:14px">Подключить</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

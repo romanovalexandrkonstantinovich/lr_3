@@ -1,0 +1,15 @@
+<header class="mw-header">
+  <a href="{{ url_for('home') }}" class="mw-logo"><span class="a">Mobi</span><span class="b">Wave</span></a>
+  <nav>
+    <a href="{{ url_for('home') }}" class="{% if active=='about' %}on{% endif %}">О нас</a>
+    <a href="{{ url_for('services_public') }}" class="{% if active=='services' %}on{% endif %}">Услуги</a>
+    <a href="{{ url_for('tariffs') }}" class="{% if active=='tariffs' %}on{% endif %}">Тарифы</a>
+    {% if show_login is not defined or show_login %}
+      {% if session.user_id %}
+        <a href="{{ url_for('my_tariff') }}" class="mw-btn mw-btn-primary" style="padding:10px 26px">Кабинет</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="mw-btn mw-btn-primary" style="padding:10px 26px">Войти</a>
+      {% endif %}
+    {% endif %}
+  </nav>
+</header>

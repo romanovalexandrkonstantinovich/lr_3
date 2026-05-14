@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% from "_stars.html" import stars %}
+{% block title %}MobiWave — Главная{% endblock %}
+{% block body %}
+{% include "_header.html" %}
+<div class="mw-page" style="padding:64px 80px 80px">
+  <div class="mw-card" style="padding:64px 80px;max-width:920px;margin:0 auto;text-align:center">
+    <h1 style="font-size:38px;margin:0 0 28px;letter-spacing:-0.02em;font-weight:700">
+      Мы — <span class="mw-grad-text">MobiWave</span>. Мы слышим тебя.
+    </h1>
+    <p style="font-size:17px;line-height:1.65;color:var(--text-2);margin:0 auto;max-width:720px">
+      В мире сложных тарифов и запутанных условий мы возвращаем связь к её истокам — к людям. Мы создали MobiWave, чтобы тебе не приходилось расшифровывать счета и искать подвох в тарифах. Мы предлагаем прозрачные линейки с реально безлимитными приложениями и честной ценой. Наша сеть — это надёжный мост между тобой и твоими близкими, а наша поддержка — это живые люди, которые решат твой вопрос здесь и сейчас. Добро пожаловать в сообщество MobiWave, где связь — это просто.
+    </p>
+  </div>
+
+  <h2 style="text-align:center;font-size:30px;margin:72px 0 28px;letter-spacing:-0.02em;font-weight:700">Отзывы</h2>
+
+  <div id="reviews-list" style="display:grid;gap:18px;max-width:920px;margin:0 auto">
+    {% for r in reviews %}
+    <div class="mw-card" style="padding:24px 28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b style="font-weight:600;font-size:16px">{{ r.name }}</b>
+        <div style="display:flex;align-items:center;gap:8px;color:var(--text-3);font-size:13px">
+          {{ stars(r.rating) }}<span>{{ r.rating }} баллов</span>
+        </div>
+      </div>
+      <p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.6">{{ r.text }}</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h2 style="text-align:center;font-size:30px;margin:72px 0 24px;letter-spacing:-0.02em;font-weight:700">Написать отзыв</h2>
+
+  <form id="review-form" class="mw-card" style="padding:32px;max-width:920px;margin:0 auto;display:grid;gap:18px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="mw-field"><label class="mw-field-label">Имя</label><input class="mw-input" name="first_name" placeholder="Иван"></div>
+      <div class="mw-field"><label class="mw-field-label">Фамилия</label><input class="mw-input" name="last_name" placeholder="Иванов"></div>
+    </div>
+    <div class="mw-field"><label class="mw-field-label">Отзыв</label><textarea class="mw-input mw-textarea" name="text" placeholder="Поделитесь впечатлениями..." required></textarea></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+      <div class="mw-field" style="min-width:260px">
+        <label class="mw-field-label">Оценка</label>
+        <div id="rating-picker" style="display:flex;align-items:center;gap:6px;padding:12px 16px;background:var(--field);border-radius:12px">
+          {% for i in range(1, 6) %}
+          <button type="button" class="rating-star" data-value="{{ i }}" aria-label="{{ i }} баллов"
+                  style="background:none;border:0;padding:2px;cursor:pointer;line-height:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4c8d2" stroke-width="1.6" stroke-linejoin="round">
+              <path d="M12 3l2.7 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.8l-5.6 2.5 1.1-6.3L3 9.6l6.3-.9z"/>
+            </svg>
+          </button>
+          {% endfor %}
+          <span id="rating-label" style="margin-left:8px;font-size:13px;color:var(--text-3)">0 / 5</span>
+        </div>
+      </div>
+      <button type="submit" class="mw-btn mw-btn-primary" style="padding:14px 36px">Сохранить</button>
+    </div>
+    <div class="error-msg" id="review-err"></div>
+  </form>
+</div>
+{% include "_footer.html" %}
+<script>
+(function () {
+  let rating = 0;
+  const picker = document.getElementById('rating-picker');
+  const label = document.getElementById('rating-label');
+  const buttons = picker.querySelectorAll('.rating-star');
+
+  function paint(n) {
+    buttons.forEach((btn, idx) => {
+      const svg = btn.querySelector('svg');
+      const filled = idx < n;
+      svg.setAttribute('fill', filled ? '#f5b400' : 'none');
+      svg.setAttribute('stroke', filled ? '#f5b400' : '#c4c8d2');
+    });
+    label.textContent = n + ' / 5';
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('mouseenter', () => paint(+btn.dataset.value));
+    btn.addEventListener('click', () => { rating = +btn.dataset.value; paint(rating); });
+  });
+  picker.addEventListener('mouseleave', () => paint(rating));
+
+  function starsSvg(n) {
+    let out = '<span style="display:inline-flex;gap:2px">';
+    for (let i = 0; i < 5; i++) {
+      const filled = i < n;
+      out += '<svg width="14" height="14" viewBox="0 0 24 24" fill="' + (filled ? '#f5b400' : 'none') +
+             '" stroke="' + (filled ? '#f5b400' : '#c4c8d2') +
+             '" stroke-width="1.6" stroke-linejoin="round">' +
+             '<path d="M12 3l2.7 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.8l-5.6 2.5 1.1-6.3L3 9.6l6.3-.9z"/></svg>';
+    }
+    return out + '</span>';
+  }
+
+  const form = document.getElementById('review-form');
+  const err = document.getElementById('review-err');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.textContent = '';
+    const fd = new FormData(form);
+    const payload = {
+      first_name: fd.get('first_name'),
+      last_name: fd.get('last_name'),
+      text: fd.get('text'),
+      rating,
+    };
+    const res = await fetch('{{ url_for("add_review") }}', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Ошибка'; return; }
+
+    const name = ((payload.first_name || '') + ' ' + (payload.last_name || '')).trim() || 'Аноним';
+    const card = document.createElement('div');
+    card.className = 'mw-card';
+    card.style.cssText = 'padding:24px 28px';
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+        '<b style="font-weight:600;font-size:16px"></b>' +
+        '<div style="display:flex;align-items:center;gap:8px;color:var(--text-3);font-size:13px">' +
+          starsSvg(rating) + '<span>' + rating + ' баллов</span>' +
+        '</div>' +
+      '</div>' +
+      '<p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.6"></p>';
+    card.querySelector('b').textContent = name;
+    card.querySelector('p').textContent = payload.text;
+    const list = document.getElementById('reviews-list');
+    list.insertBefore(card, list.firstChild);
+
+    form.reset();
+    rating = 0;
+    paint(0);
+  });
+})();
+</script>
+{% endblock %}

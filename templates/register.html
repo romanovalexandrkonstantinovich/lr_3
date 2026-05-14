@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Регистрация{% endblock %}
+{% block body %}
+{% include "_header.html" %}
+<div class="mw-page center-page" style="padding:60px 80px">
+  <div class="mw-card" style="padding:40px 48px;width:460px">
+    <h1 style="margin:0 0 6px;font-size:28px;letter-spacing:-0.02em;font-weight:700">Регистрация</h1>
+    <p style="margin:0 0 24px;color:var(--text-3);font-size:14px">Создайте свой аккаунт</p>
+    <form id="reg-form" style="display:grid;gap:14px;margin-bottom:22px">
+      <div class="mw-field"><label class="mw-field-label">Имя</label><input class="mw-input" name="first_name" placeholder="Иван"></div>
+      <div class="mw-field"><label class="mw-field-label">Фамилия</label><input class="mw-input" name="last_name" placeholder="Иванов"></div>
+      <div class="mw-field"><label class="mw-field-label">Номер телефона</label><input class="mw-input" name="phone" placeholder="+7 ___ ___-__-__" required></div>
+      <div class="mw-field"><label class="mw-field-label">Email</label><input class="mw-input" name="email" placeholder="you@email.ru" type="email" required></div>
+      <div class="mw-field"><label class="mw-field-label">Пароль</label><input class="mw-input" name="password" type="password" placeholder="Минимум 6 символов" required></div>
+      <div class="mw-field"><label class="mw-field-label">Подтверждение пароля</label><input class="mw-input" name="confirm" type="password" placeholder="Повторите пароль" required></div>
+      <button class="mw-btn mw-btn-primary" style="width:100%;padding:14px" type="submit">Зарегистрироваться</button>
+      <div class="error-msg" id="err"></div>
+    </form>
+    <p style="text-align:center;margin:0;font-size:13px;color:var(--text-3)">
+      Уже есть аккаунт? <a href="{{ url_for('login') }}" style="color:#6c4dff;font-weight:500;text-decoration:none">Войти</a>
+    </p>
+  </div>
+</div>
+<script>
+document.getElementById('reg-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd.entries());
+  const res = await fetch('{{ url_for("register") }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok) window.location = '{{ url_for("my_tariff") }}';
+  else document.getElementById('err').textContent = data.error || 'Ошибка';
+});
+</script>
+{% endblock %}

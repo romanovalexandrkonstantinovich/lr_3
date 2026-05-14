@@ -1,0 +1,11 @@
+{% macro stars(n=5) %}
+<span style="display:inline-flex;gap:2px">
+  {% for i in range(5) %}
+    {% if i < n %}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#f5b400" stroke="#f5b400" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l2.7 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.8l-5.6 2.5 1.1-6.3L3 9.6l6.3-.9z"/></svg>
+    {% else %}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c4c8d2" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l2.7 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.8l-5.6 2.5 1.1-6.3L3 9.6l6.3-.9z"/></svg>
+    {% endif %}
+  {% endfor %}
+</span>
+{% endmacro %}

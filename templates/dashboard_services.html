@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Услуги{% endblock %}
+{% block body %}
+{% set active = 'services' %}
+<div class="mw-shell">
+  {% include "_sidebar.html" %}
+  <div style="padding:32px 40px">
+    <div class="mw-title" style="margin-bottom:22px">
+      <h1>Услуги и подписки</h1>
+      <p>Управление подключёнными и доступными сервисами</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      {% for s in services %}
+      {% set is_active = s.title in active_services %}
+      <div class="mw-service-card">
+        <div class="head">
+          <div><h3>{{ s.title }}</h3><div class="sub">{{ s.desc }}</div></div>
+          <div class="icon"><span></span></div>
+        </div>
+        <div class="foot">
+          <b>{{ s.price }}</b>
+          {% if is_active %}
+          <button class="mw-btn mw-btn-danger" style="padding:10px 22px;font-size:14px"
+                  onclick="toggleService('{{ s.title }}', '{{ s.price }}', 'disconnect', this)">Отключить</button>
+          {% else %}
+          <button class="mw-btn mw-btn-primary" style="padding:10px 22px;font-size:14px"
+                  onclick="toggleService('{{ s.title }}', '{{ s.price }}', 'connect', this)">Подключить</button>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<script>
+async function toggleService(service, price, action, btn) {
+  btn.disabled = true;
+  const res = await fetch('{{ url_for("toggle_service") }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({service, price, action})
+  });
+  if (res.ok) location.reload();
+  else btn.disabled = false;
+}
+</script>
+{% endblock %}

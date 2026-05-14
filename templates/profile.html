@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Профиль{% endblock %}
+{% block body %}
+{% set active = 'settings' %}
+<div class="mw-shell">
+  {% include "_sidebar.html" %}
+  <div style="padding:32px 40px">
+    <div class="mw-title" style="margin-bottom:22px">
+      <h1>Настройки профиля</h1>
+      <p>Управление персональными данными и параметрами</p>
+    </div>
+
+    <div class="mw-card" style="padding:24px 28px;display:flex;align-items:center;gap:18px;margin-bottom:18px">
+      <div class="mw-avatar" style="width:64px;height:64px;font-size:24px">{{ (user.first_name or 'А')[0]|upper }}</div>
+      <div style="flex:1">
+        <div style="font-size:20px;font-weight:600;letter-spacing:-0.01em">{{ user.first_name }} {{ user.last_name }}</div>
+        <div style="font-size:14px;color:var(--text-3)">{{ user.phone }}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="mw-btn mw-btn-primary" style="padding:10px 18px;font-size:13px">Профиль</button>
+      </div>
+    </div>
+
+    <form id="profile-form">
+      <div class="mw-card" style="padding:28px;margin-bottom:18px">
+        <h2 style="margin:0 0 18px;font-size:18px;font-weight:600">Личные данные</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="mw-field"><label class="mw-field-label">Имя</label><input class="mw-input" name="first_name" value="{{ user.first_name or '' }}"></div>
+          <div class="mw-field"><label class="mw-field-label">Фамилия</label><input class="mw-input" name="last_name" value="{{ user.last_name or '' }}"></div>
+          <div class="mw-field"><label class="mw-field-label">Email</label><input class="mw-input" name="email" value="{{ user.email or '' }}"></div>
+          <div class="mw-field"><label class="mw-field-label">Номер телефона</label><input class="mw-input" name="phone" value="{{ user.phone or '' }}"></div>
+        </div>
+      </div>
+
+      <div class="mw-card" style="padding:28px;margin-bottom:18px">
+        <h2 style="margin:0 0 18px;font-size:18px;font-weight:600;display:flex;align-items:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          Смена пароля
+        </h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="mw-field"><label class="mw-field-label">Новый пароль</label><input class="mw-input" name="new_password" type="password" placeholder="Минимум 6 символов"></div>
+          <div class="mw-field"><label class="mw-field-label">Подтверждение пароля</label><input class="mw-input" name="confirm_password" type="password" placeholder="Повторите пароль"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center">
+        <span class="error-msg" id="err" style="margin-right:auto"></span>
+        <button type="reset" class="mw-btn mw-btn-soft">Отменить изменения</button>
+        <button type="submit" class="mw-btn mw-btn-primary">Применить изменения</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+document.getElementById('profile-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd.entries());
+  const res = await fetch('{{ url_for("profile") }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok) location.reload();
+  else document.getElementById('err').textContent = data.error || 'Ошибка';
+});
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Мой тариф{% endblock %}
+{% block body %}
+{% set active = 'tariff' %}
+<div class="mw-shell">
+    {% include "_sidebar.html" %}
+    <div style="padding:32px 40px">
+        <div class="mw-title" style="margin-bottom:22px">
+            <h1>Мой тариф</h1>
+            <p>Управление текущим тарифным планом</p>
+        </div>
+
+        <div class="mw-dark"
+             style="margin-bottom:22px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center">
+            <div>
+                <span class="mw-chip dark"><span
+                        style="width:6px;height:6px;border-radius:999px;background:#22c55e"></span>услуги активны до 01.01</span>
+                <div style="font-size:36px;font-weight:700;letter-spacing:-0.02em;margin:14px 0 4px">{{ plan }}</div>
+                <div style="font-size:22px;color:#c4c8d2">{{ plan_data.price }} ₽/мес</div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:12px">
+                <a href="{{ url_for('tariffs') }}" class="mw-btn mw-btn-soft"
+                   style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.16)">
+                    Сменить тариф
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M13 6l6 6-6 6"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px">
+            <div class="mw-stat-tile">
+                <div><span class="v">{{ plan_data.gb }}</span><span class="u">ГБ</span></div>
+                <div class="label">из пакета интернета</div>
+                <div class="bar">
+                    <div></div>
+                </div>
+            </div>
+            <div class="mw-stat-tile">
+                <div><span class="v">{{ plan_data.min }}</span><span class="u">минут</span></div>
+                <div class="label">на любые номера РФ</div>
+                <div class="bar">
+                    <div></div>
+                </div>
+            </div>
+            <div class="mw-stat-tile">
+                <div><span class="v">{{ plan_data.sms }}</span><span class="u">SMS</span></div>
+                <div class="label">на любые операторы</div>
+                <div class="bar">
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

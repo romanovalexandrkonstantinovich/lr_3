@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}MobiWave — Вход{% endblock %}
+{% block body %}
+{% include "_header.html" %}
+<div class="mw-page center-page">
+  <div class="mw-card" style="padding:44px 48px;width:460px">
+    <h1 style="margin:0 0 6px;font-size:28px;letter-spacing:-0.02em;font-weight:700">Вход</h1>
+    <p style="margin:0 0 28px;color:var(--text-3);font-size:14px">Войдите в свой личный кабинет</p>
+    <form id="login-form" style="display:grid;gap:16px;margin-bottom:24px">
+      <div class="mw-field"><label class="mw-field-label">Номер телефона</label><input class="mw-input" name="phone" placeholder="+7 ___ ___-__-__" required></div>
+      <div class="mw-field">
+        <label class="mw-field-label" style="display:flex;justify-content:space-between">
+          <span>Пароль</span>
+          <a href="#" style="color:#6c4dff;text-decoration:none;font-weight:500;font-size:12px">Забыли пароль?</a>
+        </label>
+        <input class="mw-input" name="password" type="password" placeholder="••••••••" required>
+      </div>
+      <button class="mw-btn mw-btn-primary" style="width:100%;padding:14px" type="submit">Войти</button>
+      <div class="error-msg" id="err"></div>
+    </form>
+    <p style="text-align:center;margin:0;font-size:13px;color:var(--text-3)">
+      Нет аккаунта? <a href="{{ url_for('register') }}" style="color:#6c4dff;font-weight:500;text-decoration:none">Зарегистрироваться</a>
+    </p>
+  </div>
+</div>
+<script>
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const res = await fetch('{{ url_for("login") }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({phone: fd.get('phone'), password: fd.get('password')})
+  });
+  const data = await res.json();
+  if (res.ok) window.location = '{{ url_for("my_tariff") }}';
+  else document.getElementById('err').textContent = data.error || 'Ошибка';
+});
+</script>
+{% endblock %}
